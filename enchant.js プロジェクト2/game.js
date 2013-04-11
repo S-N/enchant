@@ -60,29 +60,48 @@ window.onload = function () {
         map.image = game.assets['images/map2.gif'];
         map.loadData(blocks);
 
-        var bear = new Sprite(32, 32);
-        bear.x = 8;
-        bear.y = -32;
-        bear.vx = 0;
-        bear.vy = 0;
-        bear.ax = 0;
-        bear.ay = 0;
-        bear.pose = 0;
-        bear.jumping = true;
-        bear.jumpBoost = 0;
-        bear.image = game.assets['images/chara1.gif'];
+        Bear = enchant.Class.create(Sprite,{
+          initialize:function(x,y){
+            enchant.Sprite.call(this,32,32);
+            this.x = x;
+            this.y = y;
+            this.vx = 0;
+            this.vy = 0;
+            this.ax = 0;
+            this.ay = 0;
+            this.pose = 0;
+            this.jumping = true;
+            this.jumpBoost = 0;
+            this.image = game.assets['images/chara1.gif'];
+          },
+          dying:function(){
+                game.assets['sounds/gameover.wav'].play();
+                var score = Math.round(bear.x);
+                this.frame = 3;
+                this.vy = -40;
+                this.dead();
+          },
+          dead:function(){
+                this.addEventListener('enterframe', function () {
+                    this.vy += 1;
+                    this.y += Math.min(Math.max(this.vy, -10), 10);
+                    if (this.y > 320) {
+                    game.end(score, score + 'mで死にました');
+                }
+            });
+            this.removeEventListener('enterframe', arguments.callee);
+          }
+        });
+        var bear = new Bear(8, -32);
+        
         bear.addEventListener('enterframe', function (e) {
             var friction = 0;
-            if (this.vx > 0.3) {
-                friction = -0.3;
-            } else if (this.vx > 0) {
-                friction = -this.vx;
+            if(this.vx >= 0){
+              friction = this.vx > 0.3 ? -0.3 : -this.vx;
+            } else {
+              friction = this.vx < -0.3 ? 0.3 : -this.vx;
             }
-            if (this.vx < -0.3) {
-                friction = 0.3;
-            } else if (this.vx < 0) {
-                friction = -this.vx;
-            }
+
             if (this.jumping) {
                 if (!game.input.up || --this.jumpBoost < 0) {
                     this.ay = 0;
@@ -94,20 +113,22 @@ window.onload = function () {
                     game.assets['sounds/jump.wav'].clone().play();
                 }
             }
+
             this.ax = 0;
-            if (game.input.left) this.ax -= 0.5;
-            if (game.input.right)
+            if (game.input.left){
+              this.ax -= 0.5;
+              this.scaleX = -1;
+            }
+            if (game.input.right){
                 this.ax += 0.5;
-            if (this.ax > 0) this.scaleX = 1;
-            if (this.ax < 0) this.scaleX = -1;
+                this.scaleX = 1;
+            }
+
             if (this.ax != 0) {
                 if (game.frame % 3 == 0) {
-                    this.pose++;
-                    this.pose %= 2;
+                    this.frame %= 2;
+                    this.frame++;
                 }
-                this.frame = this.pose + 1;
-            } else {
-                this.frame = 0;
             }
             this.vx += this.ax + friction;
             this.vy += this.ay + 2; // 2 is gravity
@@ -172,18 +193,7 @@ window.onload = function () {
             this.y = dest.y - 2;
 
             if (this.y > 320) {
-                game.assets['sounds/gameover.wav'].play();
-                var score = Math.round(bear.x);
-                this.frame = 3;
-                this.vy = -20;
-                this.addEventListener('enterframe', function () {
-                    this.vy += 2;
-                    this.y += Math.min(Math.max(this.vy, -10), 10);
-                    if (this.y > 320) {
-                        game.end(score, score + 'mで死にました');
-                    }
-                });
-                this.removeEventListener('enterframe', arguments.callee);
+                this.dying();
             }
         });
 
