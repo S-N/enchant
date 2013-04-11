@@ -3,7 +3,7 @@
  * ui.enchant.js v2 (2012/11/05)
  * ui parts support
  * @require enchant.js v0.5.2 or later
- * @require image files for gamepad, icons (default: /images/pad.png, /images/a/images/pad.png, /images/icon0.png, /images/font0.png)
+ * @require image files for gamepad, icons (default: ./images/pad.png, /images/a./images/pad.png, ./images/icon0.png, ./images/font0.png)
  *
  * @features
  * - D-Pad (left, right, up, down)
@@ -47,7 +47,7 @@
 /**
  * @type {Object}
  */
-enchant.ui = { assets: ['/images/pad.png', '/images/pad.png', '/images/icon0.png', '/images/font0.png'] };
+enchant.ui = { assets: ['./images/pad.png', './images/icon0.png', './images/font0.png'] };
 
 /**
  * 方向キーパッドのクラス: Pad
@@ -61,7 +61,7 @@ enchant.ui.Pad = enchant.Class.create(enchant.Sprite, {
      */
     initialize: function() {
         var core = enchant.Core.instance;
-        var image = core.assets['/images/pad.png'];
+        var image = core.assets['./images/pad.png'];
         enchant.Sprite.call(this, image.width / 2, image.height);
         this.image = image;
         this.input = { left: false, right: false, up: false, down: false };
@@ -124,7 +124,7 @@ enchant.ui.APad = enchant.Class.create(enchant.Group, {
      */
     initialize: function(mode) {
         var core = enchant.Core.instance;
-        var image = core.assets['/images/pad.png'];
+        var image = core.assets['./images/pad.png'];
         var w = this.width = image.width;
         var h = this.height = image.height;
         enchant.Group.call(this);
@@ -551,7 +551,7 @@ enchant.ui.MutableText = enchant.Class.create(enchant.Sprite, {
             }
             x = charPos % this.widthItemNum;
             y = (charPos / this.widthItemNum) | 0;
-            this.image.draw(enchant.Game.instance.assets['/images/font0.png'],
+            this.image.draw(enchant.Game.instance.assets['./images/font0.png'],
                 x * this.fontSize, y * this.fontSize, this.fontSize, this.fontSize,
                 (i % this.row) * this.fontSize, ((i / this.row) | 0) * this.fontSize, this.fontSize, this.fontSize);
         }
@@ -692,7 +692,7 @@ enchant.ui.TimeLabel = enchant.Class.create(enchant.ui.MutableText, {
 enchant.ui.LifeLabel = enchant.Class.create(enchant.Group, {
     /**
      * ライフを表示する専用のラベル
-     * /images/icon0.png 内のハートの画像を用いる
+     * ./images/icon0.png 内のハートの画像を用いる
      * @constructs
      * @param x
      * @param y
@@ -710,7 +710,7 @@ enchant.ui.LifeLabel = enchant.Class.create(enchant.Group, {
         this.heart = [];
         for (var i = 0; i < this._maxlife; i++) {
             this.heart[i] = new enchant.Sprite(16, 16);
-            this.heart[i].image = enchant.Game.instance.assets['/images/icon0.png'];
+            this.heart[i].image = enchant.Game.instance.assets['./images/icon0.png'];
             this.heart[i].x = this.label.width + i * 16;
             this.heart[i].y = -3;
             this.heart[i].frame = 10;

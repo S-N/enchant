@@ -28,7 +28,7 @@
     /**
      * @type {Object}
      */
-    enchant.nineleap = { assets: ['/images/start.png', '/images/end.png'] };
+    enchant.nineleap = { assets: ['./images/start.png', './images/end.png'] };
 
     /**
      * @scope enchant.nineleap.Core.prototype
@@ -46,7 +46,7 @@
             this.addEventListener('load', function() {
                 var core = this;
                 this.startScene = new enchant.nineleap.SplashScene();
-                this.startScene.image = this.assets['/images/start.png'];
+                this.startScene.image = this.assets['./images/start.png'];
                 this.startScene.addEventListener('touchend', function() {
                     if (core.started === false) {
                         if (core.onstart != null) {
@@ -75,7 +75,7 @@
                 this.pushScene(this.startScene);
 
                 this.endScene = new SplashScene();
-                this.endScene.image = this.assets['/images/end.png'];
+                this.endScene.image = this.assets['./images/end.png'];
                 this.removeEventListener('load', arguments.callee);
             });
             this.scoreQueue = false;
